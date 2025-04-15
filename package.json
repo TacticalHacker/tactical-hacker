@@ -27,7 +27,6 @@
     "@biomejs/biome": "~1.9.4",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "@tailwindcss/postcss": "^4.1.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -36,6 +35,8 @@
     "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
     "husky": "^9.1.7",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"
