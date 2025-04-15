@@ -7,10 +7,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "lint": "biome check --write --unsafe",
+    "prepare": "husky ./.husky"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx --no lint-staged"
+  },
+  "lint-staged": {
+    "*": "biome check --write --no-errors-on-unmatched --files-ignore-unkown=true"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
@@ -18,18 +24,16 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
+    "@biomejs/biome": "~1.9.4",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.21.0",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
+    "cspell": "^8.18.1",
     "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4",
+    "husky": "^9.1.7",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"

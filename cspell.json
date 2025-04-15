@@ -1,0 +1,5 @@
+{
+  "dictonaries": ["typescript", "typescriptreact"],
+  "ignorePaths": ["dist", "node_modules", "coverage", "build", "lib", "out", "out-tsc"],
+  "ignoreWords": []
+}

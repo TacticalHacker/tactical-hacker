@@ -1,0 +1,8 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "always",
+    "source.organizeImports.biome": "always"
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000 // Optional: Adjust the delay in milliseconds
+}
