@@ -1,6 +1,5 @@
 import './index.css';
-import Header from './components/Header';
-import Card from './components/Card';
+import { Card, Header } from '@components';
 
 function App() {
   return (
