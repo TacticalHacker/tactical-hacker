@@ -3,7 +3,6 @@ import { Card, Header } from '@components';
 
 function App() {
   return (
-    
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-black text-white font-sans">
       {/* About Section */}
       <Header />
@@ -14,8 +13,7 @@ function App() {
           Discover our network by clicking any of the portals below.
         </p>
       </section>
-    
-      
+
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10">
         <Card title="TH-Scribes" link="https://tacticalhacker.github.io/th-scribes-frontend/" />
         <Card title="TH-Scribes" link="https://tacticalhacker.github.io/th-scribes-frontend/" />
