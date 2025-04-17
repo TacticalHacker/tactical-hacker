@@ -1,12 +1,7 @@
-import './index.css';
-import { Card, Header } from '@components';
-
 function App() {
   return (
-    
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-black text-white font-sans">
       {/* About Section */}
-      <Header />
       <section className="p-10 text-center max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold mb-4 text-neon-green">Welcome to Tactical Hacker</h1>
         <p className="text-lg text-gray-300">
@@ -14,14 +9,41 @@ function App() {
           Discover our network by clicking any of the portals below.
         </p>
       </section>
-    
-      
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10">
-        <Card title="TH-Scribes" link="https://tacticalhacker.github.io/th-scribes-frontend/" />
-        <Card title="TH-Scribes" link="https://tacticalhacker.github.io/th-scribes-frontend/" />
-        <Card title="TH-Scribes" link="https://tacticalhacker.github.io/th-scribes-frontend/" />
-        <Card title="TH-Scribes" link="https://tacticalhacker.github.io/th-scribes-frontend/" />
-      </div>
+
+      {/* Cards Section */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-10 pb-20 max-w-7xl mx-auto">
+        {/* Card 1 */}
+        <a href="https://tacticalhacker.github.io/th-scribes-frontend/" target="_blank" rel="noopener noreferrer">
+          <div className="bg-gradient-to-tr from-pink-500 to-red-500 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer">
+        <h2 className="text-2xl font-bold mb-2 text-white">TH_Scribes</h2>
+        <p className="text-sm text-white/80">Explore our world of webtoons.</p>
+          </div>
+        </a>
+
+        {/* Card 2 */}
+        <a href="https://child2.example.com" target="_blank" rel="noopener noreferrer">
+          <div className="bg-gradient-to-tr from-green-400 to-blue-500 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer">
+        <h2 className="text-2xl font-bold mb-2 text-white">Coming Soon</h2>
+        <p className="text-sm text-white/80">Coming Soon.....</p>
+          </div>
+        </a>
+
+        {/* Card 3 */}
+        <a href="https://child3.example.com" target="_blank" rel="noopener noreferrer">
+          <div className="bg-gradient-to-tr from-yellow-400 to-orange-500 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer">
+        <h2 className="text-2xl font-bold mb-2 text-white">Coming Soon</h2>
+        <p className="text-sm text-white/80">Coming Soon.....</p>
+          </div>
+        </a>
+
+        {/* Card 4 */}
+        <a href="https://child4.example.com" target="_blank" rel="noopener noreferrer">
+          <div className="bg-gradient-to-tr from-purple-500 to-indigo-600 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer">
+        <h2 className="text-2xl font-bold mb-2 text-white">Coming Soon</h2>
+        <p className="text-sm text-white/80">Coming Soon.....</p>
+          </div>
+        </a>
+      </section>
     </div>
   );
 }
