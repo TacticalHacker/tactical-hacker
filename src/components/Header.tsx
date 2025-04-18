@@ -1,4 +1,4 @@
-import logo from '../assets/logo.png'; // Add your logo image here
+import logo from '../assets/th-logo.png'; // Add your logo image here
 
 export default function Header() {
   return (
