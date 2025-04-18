@@ -30,7 +30,7 @@ function App() {
       {/* Cards Section */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 pt-10 pb-20 max-w-7xl mx-auto">
         {/* Card 1 */}
-        <a href="https://tacticalhacker.github.io/th-scribes-frontend/" target="_blank" rel="noopener noreferrer">
+        <a href="https://tacticalhacker.github.io/th-scribes/" target="_blank" rel="noopener noreferrer">
           <div className="bg-gradient-to-tr from-pink-500 to-red-500 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer">
             <h2 className="text-2xl font-bold mb-2 text-white">TH-Scribes</h2>
             <p className="text-sm text-white/80">Explore our world of webtoons.</p>
