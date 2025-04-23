@@ -4,6 +4,23 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white font-sans">
 
+      {/* Navbar */}
+      <header className="w-full bg-[#131313] shadow-md border-b border-[#2a2a2a] sticky top-0 z-50">
+      <nav className="w-full px-6 py-4 flex justify-between items-center">
+          {/* Logo (Small in Nav) */}
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Logo" className="h-10 w-auto drop-shadow-sm bg-gradient-to-tr from-[#3a3a3a] to-[#5a442a] rounded-xl" />
+            
+          </div>
+
+          {/* Nav Links */}
+          <div className="space-x-6 text-sm sm:text-base">
+            <a href="#" className="hover:text-yellow-400 transition duration-200">Sign In</a>
+            <a href="#" className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200">Sign Up</a>
+          </div>
+        </nav>
+      </header>
+
       {/* Logo + About Section Side-by-Side */}
       <div className="flex flex-col items-center justify-center px-4 pt-10">
         <div className="flex flex-col lg:flex-row items-start justify-start gap-6 max-w-6xl w-full">
@@ -18,7 +35,7 @@ function App() {
           </div>
 
           {/* About Section Container */}
-          <section className="bg-[#1e1e1e]/80 rounded-xl p-8 text-left shadow-md  border-[#333] flex-grow max-w-3xl">
+          <section className="bg-[#1e1e1e]/80 rounded-xl p-8 text-left shadow-md border-[#333] flex-grow max-w-3xl">
             <h1 className="text-4xl font-bold mb-4 text-[#FFD700]">Welcome to Tactical Hacker</h1>
             <p className="text-lg text-gray-300">
               Tactical Hacker is the parent company that connects and empowers a suite of innovative platforms and products.
