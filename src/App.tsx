@@ -1,31 +1,60 @@
+import { useState } from 'react';
 import logo from './assets/th-logo.png';
 
 function App() {
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white font-sans">
 
       {/* Navbar */}
       <header className="w-full bg-[#131313] shadow-md border-b border-[#2a2a2a] sticky top-0 z-50">
-      <nav className="w-full px-6 py-4 flex justify-between items-center">
-          {/* Logo (Small in Nav) */}
+        <nav className="w-full px-6 py-4 flex justify-between items-center">
+          {/* Logo */}
           <div className="flex items-center gap-3">
             <img src={logo} alt="Logo" className="h-10 w-auto drop-shadow-sm bg-gradient-to-tr from-[#3a3a3a] to-[#5a442a] rounded-xl" />
-            
           </div>
 
           {/* Nav Links */}
           <div className="space-x-6 text-sm sm:text-base">
-            <a href="#" className="hover:text-yellow-400 transition duration-200">Sign In</a>
-            <a href="#" className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200">Sign Up</a>
+            <button type="button" onClick={() => setShowSignIn(true)} className="text-white hover:text-yellow-400 transition duration-200">Sign In</button>
+            <button type="button" onClick={() => setShowSignUp(true)} className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200">Sign Up</button>
           </div>
         </nav>
       </header>
 
-      {/* Logo + About Section Side-by-Side */}
+      {/* Sign In Modal */}
+      {showSignIn && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4 relative">
+            <button type="button" onClick={() => setShowSignIn(false)} className="absolute top-2 right-2 text-white text-xl">✖</button>
+            <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">Sign In</h2>
+            <input type="email" placeholder="Email" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
+            <input type="password" placeholder="Password" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-4" />
+            <button type="button" className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition">Sign In</button>
+          </div>
+        </div>
+      )}
+
+      {/* Sign Up Modal */}
+      {showSignUp && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4 relative">
+            <button type="button" onClick={() => setShowSignUp(false)} className="absolute top-2 right-2 text-white text-xl">✖</button>
+            <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">Sign Up</h2>
+            <input type="text" placeholder="Name" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
+            <input type="email" placeholder="Email" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
+            <input type="password" placeholder="Password" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-4" />
+            <button type="button" className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition">Sign Up</button>
+          </div>
+        </div>
+      )}
+
+      {/* Logo + About Section */}
       <div className="flex flex-col items-center justify-center px-4 pt-10">
         <div className="flex flex-col lg:flex-row items-start justify-start gap-6 max-w-6xl w-full">
-
-          {/* Logo Container */}
+          {/* Logo */}
           <div>
             <img
               src={logo}
@@ -34,7 +63,7 @@ function App() {
             />
           </div>
 
-          {/* About Section Container */}
+          {/* About Section */}
           <section className="bg-[#1e1e1e]/80 rounded-xl p-8 text-left shadow-md border-[#333] flex-grow max-w-3xl">
             <h1 className="text-4xl font-bold mb-4 text-[#FFD700]">Welcome to Tactical Hacker</h1>
             <p className="text-lg text-gray-300">
@@ -47,6 +76,7 @@ function App() {
 
       {/* Cards Section */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 pb-20 pt-10 max-w-7xl mx-auto">
+        {/* Your Cards here */}
         {/* Card 1 */}
         <a href="https://tacticalhacker.github.io/th-scribes-frontend/" target="_blank" rel="noopener noreferrer">
           <div className="bg-gradient-to-tr from-[#4b2e22] to-[#a36d2f] p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer border border-[#5c3b2e]">
@@ -78,6 +108,7 @@ function App() {
             <p className="text-sm text-white/80">Coming Soon.....</p>
           </div>
         </a>
+        {/* (Copy from your previous code, same as before) */}
       </section>
     </div>
   );
