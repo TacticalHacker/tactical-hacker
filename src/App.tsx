@@ -429,7 +429,6 @@ function App() {
         {/* Your Cards here */}
         {/* Card 1 */}
         <a href="https://tacticalhacker.github.io/th-scribes/" target="_blank" rel="noopener noreferrer">
-        <a href="https://tacticalhacker.github.io/th-scribes/" target="_blank" rel="noopener noreferrer">
           <div className="bg-gradient-to-tr from-[#4b2e22] to-[#a36d2f] p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer border border-[#5c3b2e]">
             <h2 className="text-2xl font-bold mb-2 text-white">TH-Scribes</h2>
             <p className="text-sm text-white/80">Explore our world of webtoons.</p>
@@ -438,9 +437,7 @@ function App() {
 
         {/* Card 2 */}
         <a href="/" target="_blank" rel="noopener noreferrer">
-        <a href="/" target="_blank" rel="noopener noreferrer">
           <div className="bg-gradient-to-tr from-[#2d2d2d] to-[#50523e] p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer border border-[#454738]">
-            <h2 className="text-2xl font-bold mb-2 text-white">TH-Art</h2>
             <h2 className="text-2xl font-bold mb-2 text-white">TH-Art</h2>
             <p className="text-sm text-white/80">Coming Soon.....</p>
           </div>
@@ -448,9 +445,7 @@ function App() {
 
         {/* Card 3 */}
         <a href="/" target="_blank" rel="noopener noreferrer">
-        <a href="/" target="_blank" rel="noopener noreferrer">
           <div className="bg-gradient-to-tr from-[#2e2e2e] to-[#7a4c1e] p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer border border-[#604220]">
-            <h2 className="text-2xl font-bold mb-2 text-white">TH-Blogs</h2>
             <h2 className="text-2xl font-bold mb-2 text-white">TH-Blogs</h2>
             <p className="text-sm text-white/80">Coming Soon.....</p>
           </div>
@@ -458,9 +453,7 @@ function App() {
 
         {/* Card 4 */}
         <a href="/" target="_blank" rel="noopener noreferrer">
-        <a href="/" target="_blank" rel="noopener noreferrer">
           <div className="bg-gradient-to-tr from-[#3a3a3a] to-[#5a442a] p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer border border-[#5a4b3a]">
-            <h2 className="text-2xl font-bold mb-2 text-white">TH-Creations</h2>
             <h2 className="text-2xl font-bold mb-2 text-white">TH-Creations</h2>
             <p className="text-sm text-white/80">Coming Soon.....</p>
           </div>
