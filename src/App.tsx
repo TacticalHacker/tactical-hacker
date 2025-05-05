@@ -1,28 +1,196 @@
 import { useState } from 'react';
+import { jwtDecode } from 'jwt-decode'; // Install this package using `npm install jwt-decode`
+import Cookies from 'js-cookie'; // Install this package using `npm install js-cookie`
+import { API_BASE_URL } from './constants'; // Import the constant
 import logo from './assets/th-logo.png';
+
+interface JwtPayload {
+  sub: string;
+  authorities: { authority: string }[];
+  fullName: string;
+  iat: number;
+  exp: number;
+}
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [user, setUser] = useState<{ fullName: string; role: string } | null>(null);
+
+  // State for form inputs
+  const [signInEmail, setSignInEmail] = useState('');
+  const [signInPassword, setSignInPassword] = useState('');
+  const [signUpFullName, setSignUpFullName] = useState('');
+  const [signUpEmail, setSignUpEmail] = useState('');
+  const [signUpPassword, setSignUpPassword] = useState('');
+  const [signUpYearOfBirth, setSignUpYearOfBirth] = useState('');
+
+  const handleSignIn = async () => {
+    if (!signInEmail || !signInPassword) {
+      setAuthError('Please fill in all fields.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: signInEmail, password: signInPassword }),
+      });
+      const data = await response.json();
+
+      if (data.token) {
+        try {
+          const decodedToken = jwtDecode<JwtPayload>(data.token);
+          const fullName = decodedToken.fullName;
+          const role = decodedToken.authorities[0].authority.replace('ROLE_', '');
+          const email = decodedToken.sub;
+
+          // Save details in cookies
+          Cookies.set('authToken', data.token);
+          Cookies.set('loggedInFullName', fullName);
+          Cookies.set('loggedInUserRole', role);
+          Cookies.set('loggedInUserEmail', email);
+
+          // Update state
+          setUser({ fullName, role });
+          setShowSignIn(false);
+          setAuthError('');
+
+          // Clear form fields
+          setSignInEmail('');
+          setSignInPassword('');
+        } catch (decodeError) {
+          setAuthError('Invalid token received.');
+        }
+      } else {
+        setAuthError(data.error || 'An error occurred during sign-in.');
+      }
+    } catch (error) {
+      setAuthError('Failed to connect to the server.');
+    }
+  };
+
+  const handleSignUp = async () => {
+    if (!signUpFullName || !signUpEmail || !signUpPassword || !signUpYearOfBirth) {
+      setAuthError('Please fill in all fields.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: signUpFullName,
+          email: signUpEmail,
+          password: signUpPassword,
+          role: 'USER',
+          yearOfBirth: signUpYearOfBirth,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.token) {
+        try {
+          const decodedToken = jwtDecode<JwtPayload>(data.token);
+          const fullName = decodedToken.fullName;
+          const role = decodedToken.authorities[0].authority.replace('ROLE_', '');
+          const email = decodedToken.sub;
+
+          // Save details in cookies
+          Cookies.set('authToken', data.token);
+          Cookies.set('loggedInFullName', fullName);
+          Cookies.set('loggedInUserRole', role);
+          Cookies.set('loggedInUserEmail', email);
+
+          // Update state
+          setUser({ fullName, role });
+          setShowSignUp(false);
+          setAuthError('');
+
+          // Clear form fields
+          setSignUpFullName('');
+          setSignUpEmail('');
+          setSignUpPassword('');
+          setSignUpYearOfBirth('');
+        } catch (decodeError) {
+          setAuthError('Invalid token received.');
+        }
+      } else {
+        setAuthError(data.error || 'An error occurred during sign-up.');
+      }
+    } catch (error) {
+      setAuthError('Failed to connect to the server.');
+    }
+  };
+
+  const handleLogout = () => {
+    // Clear cookies and reset state
+    Cookies.remove('authToken');
+    Cookies.remove('loggedInFullName');
+    Cookies.remove('loggedInUserRole');
+    Cookies.remove('loggedInUserEmail');
+    setUser(null);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white font-sans">
-
       {/* Navbar */}
       <header className="w-full bg-[#131313] shadow-md border-b border-[#2a2a2a] sticky top-0 z-50">
         <nav className="w-full px-6 py-4 flex justify-between items-center">
-            {/* Logo */}
-            <div className="flex items-center gap-3">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-b from-white/100 to-white/75 rounded-full blur-lg"></div>
-              <img src={logo} alt="Logo" className="h-10 w-auto drop-shadow-[0_0_25px_#ffffff] transition-transform hover:scale-105 relative" />
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-10 w-auto drop-shadow-[0_0_25px_#ffffff] transition-transform hover:scale-105 relative"
+              />
             </div>
-            </div>
+          </div>
 
           {/* Nav Links */}
-          <div className="space-x-6 text-sm sm:text-base">
-            <button type="button" onClick={() => setShowSignIn(true)} className="text-white hover:text-yellow-400 transition duration-200 cursor-pointer">Sign In</button>
-            <button type="button" onClick={() => setShowSignUp(true)} className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200 cursor-pointer">Sign Up</button>
+          <div className="space-x-6 text-sm sm:text-base flex items-center">
+            {user ? (
+              <>
+                <div className="text-white">
+                  <span className="font-bold">{user.fullName}</span> ({user.role})
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 cursor-pointer"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSignIn(true);
+                    setAuthError('');
+                  }}
+                  className="text-white hover:text-yellow-400 transition duration-200 cursor-pointer"
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSignUp(true);
+                    setAuthError('');
+                  }}
+                  className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200 cursor-pointer"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         </nav>
       </header>
@@ -31,11 +199,36 @@ function App() {
       {showSignIn && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4 relative">
-            <button type="button" onClick={() => setShowSignIn(false)} className="absolute top-2 right-2 text-white text-xl cursor-pointer">✖</button>
+            <button
+              type="button"
+              onClick={() => setShowSignIn(false)}
+              className="absolute top-2 right-2 text-white text-xl cursor-pointer"
+            >
+              ✖
+            </button>
             <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">Sign In</h2>
-            <input type="email" placeholder="Email" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
-            <input type="password" placeholder="Password" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-4" />
-            <button type="button" className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer">Sign In</button>
+            {authError && <p className="text-red-500 text-sm text-center">{authError}</p>}
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3"
+              value={signInEmail}
+              onChange={(e) => setSignInEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-4"
+              value={signInPassword}
+              onChange={(e) => setSignInPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={handleSignIn}
+              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer"
+            >
+              Sign In
+            </button>
           </div>
         </div>
       )}
@@ -44,13 +237,50 @@ function App() {
       {showSignUp && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4 relative">
-            <button type="button" onClick={() => setShowSignUp(false)} className="absolute top-2 right-2 text-white text-xl cursor-pointer">✖</button>
+            <button
+              type="button"
+              onClick={() => setShowSignUp(false)}
+              className="absolute top-2 right-2 text-white text-xl cursor-pointer"
+            >
+              ✖
+            </button>
             <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">Sign Up</h2>
-            <input type="text" placeholder="Full Name" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
-            <input type="email" placeholder="Email" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
-            <input type="password" placeholder="Password" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-4" />
-            <input type="text" placeholder="Year of Birth" className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3" />
-            <button type="button" className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer">Sign Up</button>
+            {authError && <p className="text-red-500 text-sm text-center">{authError}</p>}
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3"
+              value={signUpFullName}
+              onChange={(e) => setSignUpFullName(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3"
+              value={signUpEmail}
+              onChange={(e) => setSignUpEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-4"
+              value={signUpPassword}
+              onChange={(e) => setSignUpPassword(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Year of Birth"
+              className="w-full p-2 rounded bg-[#333] text-white focus:outline-none mb-3"
+              value={signUpYearOfBirth}
+              onChange={(e) => setSignUpYearOfBirth(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={handleSignUp}
+              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer"
+            >
+              Sign Up
+            </button>
           </div>
         </div>
       )}
