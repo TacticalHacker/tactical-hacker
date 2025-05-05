@@ -17,6 +17,7 @@ function App() {
   // State for managing UI visibility
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // State for managing authentication and user details
   const [authError, setAuthError] = useState('');
@@ -30,6 +31,9 @@ function App() {
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpYearOfBirth, setSignUpYearOfBirth] = useState('');
 
+  const [isSignInLoading, setIsSignInLoading] = useState(false);
+  const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+
   /**
    * Handles user sign-in.
    */
@@ -39,6 +43,7 @@ function App() {
       return;
     }
 
+    setIsSignInLoading(true); // Start loading
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
@@ -56,6 +61,8 @@ function App() {
       }
     } catch (error) {
       setAuthError('Failed to connect to the server.');
+    } finally {
+      setIsSignInLoading(false); // Stop loading
     }
   };
 
@@ -63,11 +70,51 @@ function App() {
    * Handles user sign-up.
    */
   const handleSignUp = async () => {
-    if (!signUpFullName || !signUpEmail || !signUpPassword || !signUpYearOfBirth) {
-      setAuthError('Please fill in all fields.');
+    // Reset error state
+    setAuthError('');
+
+    // Frontend validation
+    if (!signUpFullName) {
+      setAuthError('Full Name is required.');
+      return;
+    }
+    if (signUpFullName.length > 25) {
+      setAuthError('Full Name must not exceed 25 characters.');
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!signUpEmail) {
+      setAuthError('Email is required.');
+      return;
+    }
+    if (!emailRegex.test(signUpEmail)) {
+      setAuthError('Enter a valid email.');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    if (!signUpPassword) {
+      setAuthError('Password is required.');
+      return;
+    }
+    if (!passwordRegex.test(signUpPassword)) {
+      setAuthError('Password must be at least 6 characters and include 1 uppercase, 1 lowercase, 1 number, and 1 special character.');
+      return;
+    }
+
+    const currentYear = new Date().getFullYear(); // Get the current year
+    if (!signUpYearOfBirth) {
+      setAuthError('Year of Birth is required.');
+      return;
+    }
+    const yearOfBirth = parseInt(signUpYearOfBirth, 10);
+    if (isNaN(yearOfBirth) || yearOfBirth < 1900 || yearOfBirth > currentYear) {
+      setAuthError('Enter a valid Year of Birth');
+      return;
+    }
+
+    setIsSignUpLoading(true); // Start loading
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: 'POST',
@@ -91,7 +138,9 @@ function App() {
       }
     } catch (error) {
       setAuthError('Failed to connect to the server.');
-    }
+    } finally {
+      setIsSignUpLoading(false); // Stop loading
+  }
   };
 
   /**
@@ -166,23 +215,48 @@ function App() {
           {/* Navigation Links */}
           <div className="space-x-6 text-sm sm:text-base flex items-center">
             {user ? (
-              <>
-                <div className="text-white">
-                  <span className="font-bold">{user.fullName}</span> ({user.role})
-                </div>
+              <div className="relative">
+                {/* User Button */}
                 <button
                   type="button"
-                  onClick={handleLogout}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 cursor-pointer"
+                  className="bg-gray-800 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gray-700 transition duration-200 cursor-pointer"
+                  onClick={() => setShowUserMenu((prev) => !prev)} // Toggle dropdown visibility
                 >
-                  Logout
+                  {user.fullName}
+                  <span className="text-lg">▼</span> {/* Down arrow */}
                 </button>
-              </>
+
+                {/* Dropdown Menu */}
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-64 bg-[#1e1e1e] rounded-lg shadow-lg border border-gray-700 z-50">
+                    <div className="px-4 py-3 text-sm text-gray-300">
+                      <p className="truncate">
+                        <strong>Full Name:</strong> {user.fullName}
+                      </p>
+                      <p className="truncate">
+                        <strong>Email:</strong> {Cookies.get('loggedInUserEmail')}
+                      </p>
+                      <p>
+                        <strong>Role:</strong> {user.role}
+                      </p>
+                    </div>
+                    <div className="border-t border-gray-700 mt-2"></div>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-600 hover:text-white transition duration-200 rounded-b-lg cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 <button
                   type="button"
                   onClick={() => {
+                    clearSignInForm();
                     setShowSignIn(true);
                     setAuthError('');
                   }}
@@ -193,6 +267,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => {
+                    clearSignUpForm();
                     setShowSignUp(true);
                     setAuthError('');
                   }}
@@ -240,12 +315,16 @@ function App() {
               value={signInPassword}
               onChange={(e) => setSignInPassword(e.target.value)}
             />
+            {/* Sign In Button */}
             <button
               type="button"
               onClick={handleSignIn}
-              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer"
+              disabled={isSignInLoading} // Disable button while loading
+              className={`w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer ${
+                isSignInLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Sign In
+              {isSignInLoading ? 'Signing In...' : 'Sign In'}
             </button>
           </div>
         </div>
@@ -274,37 +353,49 @@ function App() {
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full p-2 rounded bg-[#333] text-white mb-3"
+              className={`w-full p-2 rounded bg-[#333] text-white mb-3 ${
+                authError === 'Full Name is required.' || authError === 'Full Name must not exceed 25 characters.' ? 'border border-red-500' : ''
+              }`}
               value={signUpFullName}
               onChange={(e) => setSignUpFullName(e.target.value)}
             />
             <input
               type="email"
               placeholder="Email"
-              className="w-full p-2 rounded bg-[#333] text-white mb-3"
+              className={`w-full p-2 rounded bg-[#333] text-white mb-3 ${
+                authError === 'Email is required.' || authError === 'Enter a valid email.' ? 'border border-red-500' : ''
+              }`}
               value={signUpEmail}
               onChange={(e) => setSignUpEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="Password"
-              className="w-full p-2 rounded bg-[#333] text-white mb-4"
+              className={`w-full p-2 rounded bg-[#333] text-white mb-4 ${
+                authError === 'Password is required.' || authError === 'Password must be at least 6 characters and include 1 uppercase, 1 lowercase, 1 number, and 1 special character.' ? 'border border-red-500' : ''
+              }`}
               value={signUpPassword}
               onChange={(e) => setSignUpPassword(e.target.value)}
             />
             <input
               type="text"
               placeholder="Year of Birth"
-              className="w-full p-2 rounded bg-[#333] text-white mb-3"
+              className={`w-full p-2 rounded bg-[#333] text-white mb-3 ${
+                authError.includes('Year of Birth') ? 'border border-red-500' : ''
+              }`}
               value={signUpYearOfBirth}
               onChange={(e) => setSignUpYearOfBirth(e.target.value)}
             />
+            {/* Sign Up Button */}
             <button
               type="button"
               onClick={handleSignUp}
-              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer"
+              disabled={isSignUpLoading} // Disable button while loading
+              className={`w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer ${
+                isSignUpLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Sign Up
+              {isSignUpLoading ? 'Signing Up...' : 'Sign Up'}
             </button>
           </div>
         </div>
