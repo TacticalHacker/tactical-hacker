@@ -1,0 +1,38 @@
+name: PR
+
+on:
+  pull_request:
+    types:
+      - assigned
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths: [
+      'src/**',
+      'public/**',
+      '**/package*.json',
+      '**workflows/**.yml'
+    ]
+
+permissions: write-all # Required for the GitHub Pages action to deploy
+
+concurrency: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+
+jobs:
+  Frontend-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22 # Specify the Node.js version compatible with your project
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Vite-React app
+        run: npm run build
