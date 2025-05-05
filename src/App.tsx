@@ -173,7 +173,7 @@ function App() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 cursor-pointer"
                 >
                   Logout
                 </button>
@@ -186,7 +186,7 @@ function App() {
                     setShowSignIn(true);
                     setAuthError('');
                   }}
-                  className="text-white hover:text-yellow-400 transition duration-200"
+                  className="text-white hover:text-yellow-400 transition duration-200 cursor-pointer"
                 >
                   Sign In
                 </button>
@@ -196,7 +196,7 @@ function App() {
                     setShowSignUp(true);
                     setAuthError('');
                   }}
-                  className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200"
+                  className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition duration-200 cursor-pointer"
                 >
                   Sign Up
                 </button>
@@ -208,8 +208,22 @@ function App() {
 
       {/* Sign In Modal */}
       {showSignIn && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4">
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+          onClick={() => setShowSignIn(false)} // Close when clicking outside the modal
+        >
+          <div
+            className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4 relative"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setShowSignIn(false)}
+              className="absolute top-2 right-2 text-white text-xl cursor-pointer"
+            >
+              ✖
+            </button>
             <h2 className="text-2xl font-bold text-yellow-400 text-center">Sign In</h2>
             {authError && <p className="text-red-500 text-sm text-center">{authError}</p>}
             <input
@@ -229,7 +243,7 @@ function App() {
             <button
               type="button"
               onClick={handleSignIn}
-              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600"
+              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer"
             >
               Sign In
             </button>
@@ -239,8 +253,22 @@ function App() {
 
       {/* Sign Up Modal */}
       {showSignUp && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4">
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+          onClick={() => setShowSignUp(false)} // Close when clicking outside the modal
+        >
+          <div
+            className="bg-[#1e1e1e] rounded-xl p-8 w-80 space-y-4 relative"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setShowSignUp(false)}
+              className="absolute top-2 right-2 text-white text-xl cursor-pointer"
+            >
+              ✖
+            </button>
             <h2 className="text-2xl font-bold text-yellow-400 text-center">Sign Up</h2>
             {authError && <p className="text-red-500 text-sm text-center">{authError}</p>}
             <input
@@ -274,7 +302,7 @@ function App() {
             <button
               type="button"
               onClick={handleSignUp}
-              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600"
+              className="w-full bg-yellow-500 text-black py-2 rounded hover:bg-yellow-600 transition cursor-pointer"
             >
               Sign Up
             </button>
