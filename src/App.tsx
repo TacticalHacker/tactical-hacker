@@ -1,17 +1,6 @@
-import { useState } from 'react';
-import Navbar from './components/Navbar';
 import logo from './assets/th-logo.png';
 
-interface JwtPayload {
-  sub: string;
-  authorities: { authority: string }[];
-  fullName: string;
-  iat: number;
-  exp: number;
-}
-
 function App() {
-  const [user, setUser] = useState<{ fullName: string; role: string } | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white font-sans">

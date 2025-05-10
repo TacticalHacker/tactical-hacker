@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from './constants';
 import Cookies from 'js-cookie';
 
@@ -13,6 +14,7 @@ interface User {
 function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,6 +51,14 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white p-8">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate('/')} // Navigate back to the home screen
+        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-200 mb-6 cursor-pointer"
+      >
+        ← Back to Home
+      </button>
+
       <h1 className="text-3xl font-bold text-yellow-400 mb-6">Admin Dashboard</h1>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse border border-gray-700">
