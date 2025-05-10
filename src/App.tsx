@@ -4,10 +4,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white font-sans">
-      {/* Navbar */}
-      {/* <Navbar user={user} setUser={setUser} /> */}
 
-      {/* Rest of the App */}
       <div className="flex flex-col items-center justify-center px-4 pt-10">
         <div className="flex flex-col lg:flex-row items-start justify-start gap-6 max-w-6xl w-full">
           {/* Logo */}
