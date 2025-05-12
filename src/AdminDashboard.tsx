@@ -9,6 +9,7 @@ interface User {
   email: string;
   yearOfBirth: number;
   role: { id: number; name: string };
+  contractStatus?: string; // New field for contract status
 }
 
 function AdminDashboard() {
@@ -22,7 +23,7 @@ function AdminDashboard() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/getAllUsers`, {
+        const response = await fetch(`${API_BASE_URL}/api/admin/getAllUsersWithContracts`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${Cookies.get('authToken')}`,
@@ -37,7 +38,7 @@ function AdminDashboard() {
         }
 
         const data = await response.json();
-        setUsers(data);
+        setUsers(data); // Users now include contractStatus
       } catch (err) {
         setError('Failed to connect to the server.');
         setShowMessage(true);
@@ -100,6 +101,53 @@ function AdminDashboard() {
     }
   };
 
+  const handleSendContract = async (clientId: string) => {
+    const confirmSend = window.confirm('Are you sure you want to send a contract to this client?');
+
+    if (!confirmSend) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/sendContract`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('authToken')}`,
+        },
+        body: JSON.stringify({ clientId }), // Updated key from userId to clientId
+      });
+
+      if (response.ok) {
+        setSuccessMessage('Contract sent successfully.');
+        setError('');
+        setShowMessage(true);
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === clientId ? { ...user, contractStatus: 'Contract Sent' } : user
+          )
+        );
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to send contract.');
+        setSuccessMessage('');
+        setShowMessage(true);
+      }
+
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 5000);
+    } catch (err) {
+      setError('Failed to connect to the server.');
+      setSuccessMessage('');
+      setShowMessage(true);
+
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 5000);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#202020] to-black text-white p-4 sm:p-8">
       {/* Back Button */}
@@ -136,7 +184,8 @@ function AdminDashboard() {
               <th className="p-2 sm:p-4 border border-gray-700">Email</th>
               <th className="p-2 sm:p-4 border border-gray-700">Year of Birth</th>
               <th className="p-2 sm:p-4 border border-gray-700">Role</th>
-              <th className="p-2 sm:p-4 border border-gray-700">Change Role</th>
+              <th className="p-2 sm:p-4 border border-gray-700">Contract Status</th>
+              <th className="p-2 sm:p-4 border border-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -148,16 +197,32 @@ function AdminDashboard() {
                 <td className="p-2 sm:p-4 border border-gray-700">{user.yearOfBirth}</td>
                 <td className="p-2 sm:p-4 border border-gray-700">{user.role.name}</td>
                 <td className="p-2 sm:p-4 border border-gray-700">
+                  {user.contractStatus || 'No Contract'}
+                </td>
+                <td className="p-2 sm:p-4 border border-gray-700">
                   {user.email !== loggedInUserEmail ? (
-                    <select
-                      value={user.role.name}
-                      onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                      className="bg-gray-800 text-white px-2 py-1 rounded"
-                    >
-                      <option value="ADMIN">ADMIN</option>
-                      <option value="CLIENT">CLIENT</option>
-                      <option value="USER">USER</option>
-                    </select>
+                    <>
+                      {/* Change Role Dropdown */}
+                      <select
+                        value={user.role.name}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                        className="bg-gray-800 text-white px-2 py-1 rounded mb-2"
+                      >
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="CLIENT">CLIENT</option>
+                        <option value="USER">USER</option>
+                      </select>
+
+                      {/* Send Contract Button */}
+                      {user.role.name === 'CLIENT' && user.contractStatus === 'No Contract' && (
+                        <button
+                          onClick={() => handleSendContract(user.email)}
+                          className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                          Send Contract
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <span className="text-gray-500">No actions available</span>
                   )}

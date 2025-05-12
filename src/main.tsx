@@ -5,6 +5,7 @@ import './index.css';
 import Layout from './components/Layout';
 import AdminDashboard from './AdminDashboard';
 import App from './App'; // Use App.tsx as the home page
+import Contract from './Contract';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -27,6 +28,8 @@ function AppWrapper() {
           <Route index element={<App />} />
           {/* Admin Dashboard */}
           <Route path="adminDashboard" element={<AdminDashboard />} />
+          {/* Contract Page */}
+          <Route path="/contract" element={<Contract />} />
         </Route>
       </Routes>
     </Router>

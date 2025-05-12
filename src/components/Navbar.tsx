@@ -234,6 +234,14 @@ function Navbar({ user, setUser }: NavbarProps) {
               Admin Dashboard
             </button>
           )}
+          {user?.role === 'CLIENT' && (
+            <button
+              onClick={() => navigate('/contract')}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 cursor-pointer"
+            >
+              Contract
+            </button>
+          )}
           {user ? (
             <div className="relative">
               {/* User Dropdown Button */}
