@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from './constants';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 import ContractTemplate from './ContractTemplate';
 
 interface Contract {
@@ -21,7 +20,6 @@ interface Contract {
 function Contract() {
   const [contract, setContract] = useState<Contract | null>(null);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchContract = async () => {
